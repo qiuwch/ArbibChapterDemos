@@ -1,5 +1,18 @@
+# ipython checkpoint
 .ipynb_checkpoints
+
+# Mac trash
 .DS_Store
+
+# Excluded folder
 exclude/
+trash/
+
+# Editor temporary files
 *~
 *.swp
+
+# Auto generated files
+*.html
+*.py
+*.zip
