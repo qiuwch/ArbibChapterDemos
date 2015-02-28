@@ -1,6 +1,29 @@
 #!env python
 # script to sync publish this folder to a web server
 import time
+
+datetimeLog = {}
+def loadTimestamp():
+    # parse stored log
+    import os
+    timeFormat = '%Y-%m-%dT%H:%M:%SZ'
+    logFilename = '.log'
+    if os.path.exists(logFilename):
+        f = open(logFilename, 'r')
+        lines = f.readlines()
+        for line in lines:
+            [a, b] = line.strip().split(' ')
+            datetimeLog[a] = time.strptime(b, timeFormat)
+
+def writeTimestamp():
+    # save updated log
+    logFilename = '.log'
+    timeFormat = '%Y-%m-%dT%H:%M:%SZ'
+    f = open(logFilename, 'w')
+    for filename in datetimeLog.keys():
+        f.write(filename + ' ' + time.strftime(timeFormat, datetimeLog[filename]) + '\n')
+    f.close()
+
 def s3_update():
     ''' Script to upload file to s3 '''
     import boto
@@ -40,12 +63,12 @@ def s3_update():
     # exclude image file
     def exclude(filename):
         dirs = filename.split('/')[:-1]
-        excludeFolder = ['.git', 'trash', 'reference']
+        excludeFolder = ['.git', 'trash', 'reference', '.ipynb_checkpoints']
         for folder in dirs:
             if folder in excludeFolder:
                 return True
 
-        for ext in ['.py', '.git', '.ipynb', '.swp', '.zip', '.DS_Store', '.log', '.gitignore']:
+        for ext in ['.py', '.git', '.swp', '.zip', '.DS_Store', '.log', '.gitignore']:
             if filename.endswith(ext):
                 return True
         else:
@@ -57,16 +80,7 @@ def s3_update():
         sys.stdout.write('.')
         sys.stdout.flush()
 
-    # parse stored log
-    datetimeLog = {}
-    timeFormat = '%Y-%m-%dT%H:%M:%SZ'
-    logFilename = '.log'
-    if os.path.exists(logFilename):
-        f = open(logFilename, 'r')
-        lines = f.readlines()
-        for line in lines:
-            [a, b] = line.strip().split(' ')
-            datetimeLog[a] = time.strptime(b, timeFormat)
+
      
     for filename in uploadFileNames:
         updateTime = time.strptime(time.ctime(os.path.getmtime(filename)))
@@ -98,13 +112,41 @@ def s3_update():
             k.key = destpath
             k.set_contents_from_filename(sourcepath,
                     cb=percent_cb, num_cb=10)
+        
+        datetimeLog[filename] = updateTime
+
+
+
+def exportHTML():
+    import glob
+    import os
+    import IPython.nbconvert
+    from IPython.nbformat import current as nbformat
+
+    files = glob.glob('./ipynb/*.ipynb')
+    HTMLDir = './html/'
+    for filename in files:
+        updateTime = time.strptime(time.ctime(os.path.getmtime(filename)))
+        if datetimeLog.get(filename) and updateTime <= datetimeLog[filename]:
+            continue
+
+        with open(filename, 'r') as f:
+            notebook = nbformat.read(f, 'ipynb')
+
+        from IPython.nbconvert import HTMLExporter
+        from IPython.config import Config
+        exportHtml = HTMLExporter(config=None, template_file='./data/other/full.tpl')
+        
+        htmlFilename = HTMLDir + filename.split('/')[-1].replace('.ipynb', '.html')
+        ipynbFilename = '../ipynb/' + filename.split('/')[-1]
+        print 'Convert from %s to %s' % (ipynbFilename, htmlFilename)
+        (body,resources) = exportHtml.from_notebook_node(notebook, resources={'filename':ipynbFilename})
+        with open(htmlFilename, 'w') as f:
+            f.write(body.encode('utf-8'))
 
         datetimeLog[filename] = updateTime
 
-    # save updated log
-    f = open(logFilename, 'w')
-    for filename in datetimeLog.keys():
-        f.write(filename + ' ' + time.strftime(timeFormat, datetimeLog[filename]) + '\n')
-    f.close()
-
+loadTimestamp()           
+exportHTML()        
 s3_update()
+writeTimestamp()
