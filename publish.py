@@ -121,7 +121,9 @@ def exportHTML():
     import glob
     import os
     import IPython.nbconvert
-    from IPython.nbformat import current as nbformat
+    #from IPython.nbformat import current as nbformat
+    #from IPython.nbformat.v3 import nbformat
+    import IPython.nbformat as nbformat
 
     files = glob.glob('./ipynb/*.ipynb')
     HTMLDir = './html/'
@@ -146,7 +148,7 @@ def exportHTML():
 
         datetimeLog[filename] = updateTime
 
-loadTimestamp()           
-exportHTML()        
+#loadTimestamp()           
+#exportHTML()        
 s3_update()
 writeTimestamp()

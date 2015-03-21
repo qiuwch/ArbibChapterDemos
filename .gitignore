@@ -18,3 +18,5 @@ reference/
 *.py
 *.zip
 .log
+.dropbox
+Icon
