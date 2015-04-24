@@ -1,0 +1,25 @@
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css");
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css");
+@import url("http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css");
+
+figure {
+	margin: 10px 0px 10px; /* top left right bottom */
+}
+
+td {
+	margin: 5px;
+}
+
+figure figcaption {
+	text-align: center;
+}
+
+article {
+	max-width: 600px;
+}
+
+br {
+  content: ""; /* This hacky way can work, by setting the content */
+  margin: 10px 0px;
+  display: block;
+}

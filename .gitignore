@@ -1,3 +1,6 @@
+# Excluded file type
+*.docx
+
 # ipython checkpoint
 .ipynb_checkpoints
 
@@ -14,8 +17,6 @@ reference/
 *.swp
 
 # Auto generated files
-*.html
-*.py
 *.zip
 .log
 .dropbox
