@@ -183,7 +183,7 @@ def publish():
             s3uploader.uploadFile(filename, destpath)
             manager.update(filename)
 
-    s3uploader.uploadFile('index.html', 'index.html')
+    s3uploader.uploadFile('./src/index.html', 'index.html')
 
     manager.save()
 
