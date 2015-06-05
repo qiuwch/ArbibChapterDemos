@@ -3,6 +3,8 @@
 
 # # Mean field
 
+# In this interactive we introduce the Mean field method to solve the foreground/background segmentation problem. First, we set up the basic iPython notebook enviroment.
+
 # In[1]:
 
 # Initiialization code
@@ -14,6 +16,8 @@ import matplotlib.pyplot as plt
 import time
 from IPython.display import display, clear_output
 
+
+# The input image for our algorithm is shown in the following cell. The color image is converted to gray scale image and normalize to range [-1, 1].
 
 # In[2]:
 
@@ -45,6 +49,8 @@ def preproc_data(im, scale=0.1, debug=False):
 
 [I, im] = preproc_data(im, debug=True) # data is normalized image
 
+
+# The foreground/background segmentation problem is defined as
 
 # Update rule for $ u_i $
 # 
