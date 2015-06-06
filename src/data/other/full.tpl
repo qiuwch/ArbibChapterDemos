@@ -9,8 +9,6 @@
 
 <meta charset="utf-8" />
 <title>{{resources['metadata']['name']}}</title>
-<a href="../index.html">Homepage</a>
-<a href="{{resources['filename']}}">Download this ipython notebook</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -62,6 +60,7 @@ div#notebook {
 <body>
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
+    <a href="../index.html">Homepage</a>
 {{ super() }}
     </div>
   </div>
