@@ -169,6 +169,8 @@ def publish():
 
             exportHTML(filename, htmlFilename)
             s3uploader.uploadFile(htmlFilename, destpath)
+            s3uploader.uploadFile(filename, 'ipynb/' + filename.split('/')[-1])            
+
             manager.update(filename)
 
     # Upload data files
